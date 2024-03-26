@@ -3,11 +3,16 @@
 
   const config = {
     length: 5,
+    maxTryCount: 10,
     targetWord: '',
   };
-  const wordInput = document.querySelector('.word');
+  let tryCount = 0;
+  let remainingTryCount = config.maxTryCount;
+  const wordInput = document.getElementById('answer');
 
   /**
+   * Generate random integer
+   *
    * @see https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Math/random
    * @param {Number} min
    * @param {Number} max
@@ -17,6 +22,9 @@
     return Math.floor(Math.random() * (max - min + 1)) + min;
   };
 
+  /**
+   * Initialize
+   */
   const init = () => {
     // Initialize word
     const targetWord = wordList[getRandomInt(0, wordList.length)];
@@ -28,28 +36,59 @@
     wordInput.maxLength = config.length;
 
     // Initialize events
-    document.querySelectorAll('.btn').forEach(function (btn) {
-      btn.addEventListener('click', function (e) {
-        const word = wordInput.value;
-        judgeWord(word);
-      });
+    document.getElementById('check').addEventListener('click', (e) => {
+      const word = wordInput.value;
+      judgeWord(word);
     });
+
+    // Initialize try count
+    updateTryCount();
   };
 
+  /**
+   * Check if all characters are correct
+   *
+   * @param {object} result
+   * @return {boolean}
+   */
   const isAllCorrect = (result) => {
     return result.every((r) => r.isCorrect);
   }
 
+  /**
+   * Convert result object to HTML string
+   *
+   * @param {object} result
+   * @returns
+   */
   const toHtml = (result) => {
-    return result.map((r) => {
+    const chars =  result.map((r) => {
       const className = r.isCorrect ? 'correct' : (r.isIncluded ? 'included' : '');
       return `<span class="char ${className}">${r.char}</span>`;
     }).join('');
+    return `<div id="result-line-${tryCount}" class="result-line">${chars}</div>`;
   };
 
+  /**
+   * Update try count view
+   */
+  const updateTryCount = () => {
+    document.getElementById('try-count').innerText = `${remainingTryCount}`;
+  };
+
+  /**
+   * Judge word
+   *
+   * @param {string} word
+   */
   const judgeWord = (word) => {
+    if (remainingTryCount <= 0) {
+      alert('Game Over');
+      return;
+    }
     if (word.length !== config.length) {
-      throw new Error('length is not 5');
+      alert(`Length is not ${config.length}`);
+      return;
     }
 
     const result = [];
@@ -69,14 +108,23 @@
       result.push(matchResult);
     }
 
-    document.getElementById('result-area').innerHTML += '<div class="result-line">' + toHtml(result) + '</div>';
+    document.getElementById('result-area').innerHTML += toHtml(result);
+
+    tryCount++;
+    remainingTryCount--;
+    updateTryCount();
 
     // wait for rendering
-    if (isAllCorrect(result)) {
-      setTimeout(() => {
+    setTimeout(() => {
+      if (isAllCorrect(result)) {
         alert('Congratulations!');
-      }, 0);
-    }
+      } else {
+        if (remainingTryCount <= 0) {
+          alert('Game Over');
+        }
+      }
+      wordInput.focus();
+    }, 0);
   };
 
   init();
