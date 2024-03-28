@@ -5,19 +5,27 @@
     <link rel="stylesheet" type="text/css" href="default.css" />
   </head>
   <body>
-    <h1>Wordle Sample</h1>
-    <h2>You can try <span id="try-count"></span> times.</h2>
-    <div id="result-area">
-      <!--
-      <div class="result-line">
-        <span class="char">W</span><span class="char included">W</span><span class="char correct">W</span><span class="char">W</span><span class="char included">W</span>
+    <div id="container">
+      <div id="left-container">
+        <h1>Wordle Sample</h1>
+        <h2>You can try <span id="try-count"></span> times.</h2>
+        <div id="answer-area">
+          <input type="text" id="answer" class="word" value="" />
+          <button id="check" class="btn">Check</button>
+        </div>
+        <div id="clear-time">00:00:00</div>
+        <div id="answer-check"></div>
       </div>
-      -->
-    </div>
-
-    <div id="answer-area">
-      <input type="text" id="answer" class="word" value="" />
-      <button id="check" class="btn">Check</button>
+      <div id="right-container">
+        <div id="result-area">
+          <!--
+          -->
+          <div class="result-line">
+            <span class="char">W</span><span class="char included">W</span><span class="char correct">W</span><span class="char">W</span><span class="char included">W</span>
+            <span class="time">00:00:00</span>
+          </div>
+        </div>
+      </div>
     </div>
   </body>
 	<script type="text/javascript" src="wordlist.js"></script>

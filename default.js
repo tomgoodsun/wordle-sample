@@ -6,9 +6,19 @@
     maxTryCount: 10,
     targetWord: '',
   };
-  let tryCount = 0;
+  let isFinished, isStarted, timeSec, timeStr, tryCount;
   let remainingTryCount = config.maxTryCount;
   const wordInput = document.getElementById('answer');
+
+  /**
+   * Add zero padding to number
+   *
+   * @param {Number} length
+   * @return string
+   */
+  Number.prototype.zeroFill = function (length) {
+    return ('0'.repeat(length) + this.toString()).slice(-length);
+  };
 
   /**
    * Generate random integer
@@ -31,18 +41,64 @@
     config.targetWord = targetWord;
     console.log('targetWord:', targetWord);
 
+    // Reset game
+    reset();
+
     // Initialize form controls
     wordInput.minLength = config.length;
     wordInput.maxLength = config.length;
 
     // Initialize events
+    wordInput.addEventListener('keydown', (e) => {
+      console.log('keydown:', e.key);
+      if ('Enter' === e.key) {
+        judgeWord(wordInput.value);
+      }
+    });
     document.getElementById('check').addEventListener('click', (e) => {
-      const word = wordInput.value;
-      judgeWord(word);
+      judgeWord(wordInput.value);
+    });
+
+    wordInput.addEventListener('change', (e) => {
+      console.log('change:', e.target.value);
+      if (!isStarted) {
+        isStarted = true;
+        setTimeout(updateTimer, 1000);
+      }
     });
 
     // Initialize try count
     updateTryCount();
+  };
+
+  /**
+   * Reset game
+   */
+  const reset = () => {
+    isFinished = false;
+    isStarted = false;
+    timeSec = 0;
+    timeStr = '00:00:00';
+    tryCount = 0;
+    remainingTryCount = config.maxTryCount;
+    document.getElementById('result-area').innerHTML = '';
+    document.getElementById('answer-check').innerHTML = '';
+    updateTryCount();
+  }
+
+  /**
+   * Update timer
+   */
+  const updateTimer = () => {
+    if (isStarted) {
+      timeSec++;
+      let hrs = Math.floor(timeSec / 3600).zeroFill(2);
+      let min = Math.floor((timeSec % 3600) / 60).zeroFill(2);
+      let sec = (timeSec % 60).zeroFill(2);
+      timeStr = `${hrs}:${min}:${sec}`;
+      document.getElementById('clear-time').innerText = timeStr;
+      setTimeout(updateTimer, 1000);
+    }
   };
 
   /**
@@ -52,6 +108,9 @@
    * @return {boolean}
    */
   const isAllCorrect = (result) => {
+    if (0 === result.length) {
+      return false;
+    }
     return result.every((r) => r.isCorrect);
   }
 
@@ -66,7 +125,7 @@
       const className = r.isCorrect ? 'correct' : (r.isIncluded ? 'included' : '');
       return `<span class="char ${className}">${r.char}</span>`;
     }).join('');
-    return `<div id="result-line-${tryCount}" class="result-line">${chars}</div>`;
+    return `<div id="result-line-${tryCount}" class="result-line">${chars}<span class="time">${timeStr}</span></div>`;
   };
 
   /**
@@ -77,21 +136,40 @@
   };
 
   /**
+   * Check if game is over or not
+   *
+   * @param {boolean} useAlert
+   * @returns {boolean}
+   */
+  const checkGameOver = (useAlert) => {
+    if (remainingTryCount <= 0) {
+      isFinished = true;
+      isStarted = false;
+      if (useAlert) {
+        alert('Game Over');
+        document.getElementById('answer-check').innerHTML
+          = `Answer: <span class="answer-word">${config.targetWord}</span>`;
+      }
+      return true;
+    }
+    return false;
+  };
+
+  /**
    * Judge word
    *
    * @param {string} word
    */
   const judgeWord = (word) => {
-    if (remainingTryCount <= 0) {
-      alert('Game Over');
+    const result = [];
+
+    if (checkGameOver(false)) {
       return;
     }
     if (word.length !== config.length) {
       alert(`Length is not ${config.length}`);
       return;
     }
-
-    const result = [];
 
     for (let i = 0; i < word.length; i++) {
       const matchResult = {
@@ -117,11 +195,11 @@
     // wait for rendering
     setTimeout(() => {
       if (isAllCorrect(result)) {
+        isFinished = true;
+        isStarted = false;
         alert('Congratulations!');
       } else {
-        if (remainingTryCount <= 0) {
-          alert('Game Over');
-        }
+        checkGameOver(true);
       }
       wordInput.focus();
     }, 0);

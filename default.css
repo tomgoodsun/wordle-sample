@@ -46,7 +46,6 @@ h2
 {
   font-weight: bold;
   padding: 0;
-  text-align: center;
 }
 h1 {
   font-size: 200%;
@@ -56,15 +55,50 @@ h2 {
   font-size: 170%;
   margin: 10px 0 5px 0;
 }
+
+#container {
+  display: flex;
+  flex: 2;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  margin: 0 auto;
+  width: 100%;
+}
+#left-container,
+#right-container
+{
+  padding: 10px;
+  width: 50%;
+}
+#left-container {
+  text-align: right;
+}
+#right-container {
+  text-align: left;
+}
+#clear-time {
+  font-family: Consolas, monospace;
+  font-size: 120%;
+}
+#answer-check {
+  font-family: Consolas, monospace;
+  font-size: 120%;
+}
 #result-area {
   min-height: 80px;
   overflow: hidden;
-  text-align: center;
 }
 #result-area .result-line {
+  font-family: Consolas, monospace;
   overflow: hidden;
   padding: 5px;
   vertical-align: middle;
+}
+#result-area .result-line .time {
+  display: inline-block;
+  text-align: left;
+  vertical-align: bottom;
+  width: 100px;
 }
 #result-area .char {
   background-color: #ccc;
@@ -72,7 +106,6 @@ h2 {
   border-style: solid;
   border-width: 1px;
   color: #fff;
-  font-family: Consolas, monospace;
   font-size: 200%;
   font-weight: 200;
   line-height: 2em;
@@ -88,10 +121,6 @@ h2 {
   border-color: #32a852;
   background-color: #32a852;
 }
-
-#answer-area {
-  text-align: center;
-}
 #answer {
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -99,6 +128,7 @@ h2 {
   font-size: 200%;
   text-align: center;
   vertical-align:middle;
+  width: 5em;
 }
 #check {
   height: 40px;
