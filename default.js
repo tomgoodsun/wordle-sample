@@ -156,21 +156,12 @@
   };
 
   /**
-   * Judge word
+   * Gather match result
    *
    * @param {string} word
    */
-  const judgeWord = (word) => {
+  const gatherMatchResult = (word) => {
     const result = [];
-
-    if (checkGameOver(false)) {
-      return;
-    }
-    if (word.length !== config.length) {
-      alert(`Length is not ${config.length}`);
-      return;
-    }
-
     for (let i = 0; i < word.length; i++) {
       const matchResult = {
         char: word[i],
@@ -185,7 +176,25 @@
       }
       result.push(matchResult);
     }
+    return result;
+  };
 
+  /**
+   * Judge word
+   *
+   * @param {string} word
+   */
+  const judgeWord = (word) => {
+
+    if (checkGameOver(false)) {
+      return;
+    }
+    if (word.length !== config.length) {
+      alert(`Length is not ${config.length}`);
+      return;
+    }
+
+    const result = gatherMatchResult(word);
     document.getElementById('result-area').innerHTML += toHtml(result);
 
     tryCount++;
