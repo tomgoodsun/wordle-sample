@@ -49,16 +49,15 @@
     wordInput.maxLength = config.length;
 
     // Initialize events
+    document.getElementById('check').addEventListener('click', (e) => {
+      judgeWord(wordInput.value);
+    });
     wordInput.addEventListener('keydown', (e) => {
       console.log('keydown:', e.key);
       if ('Enter' === e.key) {
         judgeWord(wordInput.value);
       }
     });
-    document.getElementById('check').addEventListener('click', (e) => {
-      judgeWord(wordInput.value);
-    });
-
     wordInput.addEventListener('change', (e) => {
       console.log('change:', e.target.value);
       if (!isStarted) {
