@@ -141,6 +141,9 @@
    * @returns {boolean}
    */
   const checkGameOver = (useAlert) => {
+    if (isFinished) {
+      return true;
+    }
     if (remainingTryCount <= 0) {
       isFinished = true;
       isStarted = false;
