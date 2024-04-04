@@ -37,7 +37,7 @@
    */
   const init = () => {
     // Initialize word
-    const targetWord = wordList[getRandomInt(0, wordList.length)];
+    const targetWord = wordList[getRandomInt(0, wordList.length)].toUpperCase();
     config.targetWord = targetWord;
     console.log('targetWord:', targetWord);
 
