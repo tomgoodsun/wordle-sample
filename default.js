@@ -158,6 +158,20 @@
   };
 
   /**
+   * Check input word
+   *
+   * @param {string} word
+   */
+  const validateWord = (word) => {
+    if (word.length !== config.length) {
+      throw new Error(`Length is not ${config.length}`);
+    }
+    if (!word.match(/^[a-zA-Z]+$/)) {
+      throw new Error('Only alphabets are allowed');
+    }
+  }
+
+  /**
    * Gather match result
    *
    * @param {string} word
@@ -187,15 +201,18 @@
    * @param {string} word
    */
   const judgeWord = (word) => {
+    word = word.toUpperCase();
 
-    if (checkGameOver(false)) {
+    try {
+      if (checkGameOver(false)) {
+        return;
+      }
+      validateWord(word);
+    } catch (e) {
+      console.error(e);
+      alert(e.message);
       return;
     }
-    if (word.length !== config.length) {
-      alert(`Length is not ${config.length}`);
-      return;
-    }
-
     const result = gatherMatchResult(word);
     document.getElementById('result-area').innerHTML += toHtml(result);
 

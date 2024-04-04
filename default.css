@@ -79,10 +79,14 @@ h2 {
 #clear-time {
   font-family: Consolas, monospace;
   font-size: 120%;
+  margin-bottom: 10px;
+  margin-top: 10px;
 }
 #answer-check {
   font-family: Consolas, monospace;
   font-size: 120%;
+  margin-bottom: 10px;
+  margin-top: 10px;
 }
 #result-area {
   min-height: 80px;
