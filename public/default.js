@@ -33,44 +33,6 @@
   };
 
   /**
-   * Initialize
-   */
-  const init = () => {
-    // Initialize word
-    const targetWord = wordList[getRandomInt(0, wordList.length)].toUpperCase();
-    config.targetWord = targetWord;
-    console.log('targetWord:', targetWord);
-
-    // Reset game
-    reset();
-
-    // Initialize form controls
-    wordInput.minLength = config.length;
-    wordInput.maxLength = config.length;
-
-    // Initialize events
-    document.getElementById('check').addEventListener('click', (e) => {
-      judgeWord(wordInput.value);
-    });
-    wordInput.addEventListener('keydown', (e) => {
-      console.log('keydown:', e.key);
-      if ('Enter' === e.key) {
-        judgeWord(wordInput.value);
-      }
-    });
-    wordInput.addEventListener('change', (e) => {
-      console.log('change:', e.target.value);
-      if (!isStarted) {
-        isStarted = true;
-        setTimeout(updateTimer, 1000);
-      }
-    });
-
-    // Initialize try count
-    updateTryCount();
-  };
-
-  /**
    * Reset game
    */
   const reset = () => {
@@ -233,6 +195,44 @@
     }, 0);
   };
 
-  init();
+  /**
+   * Main routine
+   */
+  const main = () => {
+    // Initialize word
+    const targetWord = wordList[getRandomInt(0, wordList.length)].toUpperCase();
+    config.targetWord = targetWord;
+    console.log('targetWord:', targetWord);
+
+    // Reset game
+    reset();
+
+    // Initialize form controls
+    wordInput.minLength = config.length;
+    wordInput.maxLength = config.length;
+
+    // Initialize events
+    document.getElementById('check').addEventListener('click', (e) => {
+      judgeWord(wordInput.value);
+    });
+    wordInput.addEventListener('keydown', (e) => {
+      console.log('keydown:', e.key);
+      if ('Enter' === e.key) {
+        judgeWord(wordInput.value);
+      }
+    });
+    wordInput.addEventListener('change', (e) => {
+      console.log('change:', e.target.value);
+      if (!isStarted) {
+        isStarted = true;
+        setTimeout(updateTimer, 1000);
+      }
+    });
+
+    // Initialize try count
+    updateTryCount();
+  };
+
+  main();
 
 })(window, document, wordList);

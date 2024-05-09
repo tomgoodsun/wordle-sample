@@ -222,7 +222,7 @@
 
   // 14. メインルーチン
   /**
-   * Initialize
+   * Main routine
    */
   const main = () => {
     // TODO: TASK9 ここに処理を追加してください
