@@ -33,44 +33,6 @@
   };
 
   /**
-   * Initialize
-   */
-  const init = () => {
-    // Initialize word
-    const targetWord = wordList[getRandomInt(0, wordList.length - 1)].toUpperCase();
-    config.targetWord = targetWord;
-    console.log('targetWord:', targetWord);
-
-    // Reset game
-    reset();
-
-    // Initialize form controls
-    wordInput.minLength = config.length;
-    wordInput.maxLength = config.length;
-
-    // Initialize events
-    document.getElementById('check').addEventListener('click', (e) => {
-      judgeWord(wordInput.value);
-    });
-    wordInput.addEventListener('keydown', (e) => {
-      console.log('keydown:', e.key);
-      if ('Enter' === e.key) {
-        judgeWord(wordInput.value);
-      }
-    });
-    wordInput.addEventListener('change', (e) => {
-      console.log('change:', e.target.value);
-      if (!isStarted) {
-        isStarted = true;
-        setTimeout(updateTimer, 1000);
-      }
-    });
-
-    // Initialize try count
-    updateTryCount();
-  };
-
-  /**
    * Reset game
    */
   const reset = () => {
@@ -87,8 +49,10 @@
 
   /**
    * Update timer
+   *
+   * @param {boolean} doContinue
    */
-  const updateTimer = () => {
+  const updateTimer = (doContinue) => {
     if (isStarted) {
       timeSec++;
       let hrs = Math.floor(timeSec / 3600).zeroFill(2);
@@ -96,7 +60,9 @@
       let sec = (timeSec % 60).zeroFill(2);
       timeStr = `${hrs}:${min}:${sec}`;
       document.getElementById('clear-time').innerText = timeStr;
-      setTimeout(updateTimer, 1000);
+      if (doContinue !== false) {
+        setTimeout(() => { updateTimer(true); }, 1000);
+      }
     }
   };
 
@@ -233,6 +199,45 @@
     }, 0);
   };
 
-  init();
+  /**
+   * Main routine
+   */
+  const main = () => {
+    // Initialize word
+    const targetWord = wordList[getRandomInt(0, wordList.length)].toUpperCase();
+    config.targetWord = targetWord;
+    console.log('targetWord:', targetWord);
+
+    // Reset game
+    reset();
+
+    // Initialize form controls
+    wordInput.minLength = config.length;
+    wordInput.maxLength = config.length;
+
+    // Initialize events
+    document.getElementById('check').addEventListener('click', (e) => {
+      judgeWord(wordInput.value);
+    });
+    wordInput.addEventListener('keydown', (e) => {
+      console.log('keydown:', e.key);
+      if ('Enter' === e.key) {
+        judgeWord(wordInput.value);
+      }
+    });
+    wordInput.addEventListener('change', (e) => {
+      console.log('change:', e.target.value);
+      if (!isStarted) {
+        isStarted = true;
+        setTimeout(() => { updateTimer(true); }, 1000);
+      }
+    });
+
+    // Initialize try count
+    updateTryCount();
+  };
+
+  main();
 
 })(window, document, wordList);
+
