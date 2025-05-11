@@ -19,7 +19,7 @@
  * 11. クリアした場合は、アラートで「Congratulations!」と表示します。
  * 12. クリアでも未クリアでも正解の表示、タイマーの停止、プレイできないようにします。
  */
-((window, document, wordList) => {
+let wordle = ((window, document, wordList) => {
   'use strict';
 
   // 1. 必要な変数、オブジェクトリテラルの定義
@@ -237,6 +237,106 @@
     updateTryCount();
   };
 
-  main();
+  //main();
+  return {
+    config,
+    timeSec,
+    timeStr,
+    tryCount,
+    remainingTryCount,
+    getRandomInt,
+    isAllCorrect,
+    validateWord,
+    gatherMatchResult,
+    judgeWord,
+  };
 
 })(window, document, wordList);
+
+
+function assert(actual, expected) {
+  //if (expected instanceof Object) {
+  //}
+
+  // expectedが関数の場合は、その関数を実行して結果を比較する
+  if (expected instanceof Function) {
+    if (expected(actual)) {
+      console.assert(`OK ${expected} === ${actual}`);
+    } else {
+      console.error(`Expected ${expected}, but got ${actual}`);
+    }
+    return;
+  }
+
+  // 期待値と実際の値を比較する
+  if (actual !== expected) {
+    console.error(`Expected ${expected}, but got ${actual}`);
+  } else {
+    console.assert(`OK ${expected} === ${actual}`);
+  }
+  return;
+}
+
+// TASK1
+assert((5).zeroFill(2), '05');
+assert((5).zeroFill(3), '005');
+assert((5).zeroFill(1), '5');
+assert((5).zeroFill(0), '5');
+assert((10).zeroFill(2), '10');
+assert((10).zeroFill(3), '010');
+assert((10).zeroFill(1), '0');
+assert((10).zeroFill(0), '10');
+
+// TASK2
+//assert(wordle.getRandomInt(0, 0), 0);
+//assert(wordle.getRandomInt(0, 1), 0);
+//assert(wordle.getRandomInt(0, 2), 0);
+//assert(wordle.getRandomInt(0, 3), 0);
+//assert(wordle.getRandomInt(0, 4), 0);
+
+// TASK3
+reset();
+console.log('wordle.timeStr');
+console.log(wordle.timeStr);
+assert(wordle.timeStr, '00:00:00');
+wordle.updateTimer(false);
+assert(wordle.timeStr, '00:00:01');
+wordle.timeSec = 61;
+wordle.updateTimer(false);
+assert(wordle.timeStr, '00:01:02');
+
+// TASK4
+assert(wordle.isAllCorrect([{isCorrect: true}, {isCorrect: true}, {isCorrect: true}, {isCorrect: true}, {isCorrect: true}], true));
+assert(wordle.isAllCorrect([{isCorrect: true}, {isCorrect: true}, {isCorrect: true}, {isCorrect: true}, {isCorrect: false}], false));
+assert(wordle.isAllCorrect([{isCorrect: true}, {isCorrect: true}, {isCorrect: false}, {isCorrect: true}, {isCorrect: false}], false));
+assert(wordle.isAllCorrect([{isCorrect: false}, {isCorrect: false}, {isCorrect: false}, {isCorrect: false}, {isCorrect: false}], false));
+
+// TASK5
+assert(wordle.validateWord('ABCDE'), undefined);
+
+// TASK6
+assert(wordle.gatherMatchResult('ABCDE'), [
+  {char: 'A', isCorrect: true, isIncluded: false},
+  {char: 'B', isCorrect: true, isIncluded: false},
+  {char: 'C', isCorrect: true, isIncluded: false},
+  {char: 'D', isCorrect: true, isIncluded: false},
+  {char: 'E', isCorrect: true, isIncluded: false}
+]);
+assert(wordle.gatherMatchResult('BCDEF'), [
+  {char: 'B', isCorrect: false, isIncluded: true},
+  {char: 'C', isCorrect: false, isIncluded: true},
+  {char: 'D', isCorrect: false, isIncluded: true},
+  {char: 'E', isCorrect: false, isIncluded: true},
+  {char: 'F', isCorrect: false, isIncluded: true}
+]);
+
+// TASK7
+wordle.judgeWord('ABCDE');
+assert(wordle.remainingTryCount, 9);
+wordle.judgeWord('ABCDE');
+assert(wordle.remainingTryCount, 8);
+wordle.judgeWord('ABCDE');
+assert(wordle.remainingTryCount, 7);
+
+// TASK8
+wordle.judgeWord('ABCDE');
