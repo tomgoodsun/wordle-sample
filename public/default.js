@@ -49,8 +49,10 @@
 
   /**
    * Update timer
+   *
+   * @param {boolean} doContinue
    */
-  const updateTimer = () => {
+  const updateTimer = (doContinue) => {
     if (isStarted) {
       timeSec++;
       let hrs = Math.floor(timeSec / 3600).zeroFill(2);
@@ -58,7 +60,9 @@
       let sec = (timeSec % 60).zeroFill(2);
       timeStr = `${hrs}:${min}:${sec}`;
       document.getElementById('clear-time').innerText = timeStr;
-      setTimeout(updateTimer, 1000);
+      if (doContinue !== false) {
+        setTimeout(() => { updateTimer(true); }, 1000);
+      }
     }
   };
 
@@ -225,7 +229,7 @@
       console.log('change:', e.target.value);
       if (!isStarted) {
         isStarted = true;
-        setTimeout(updateTimer, 1000);
+        setTimeout(() => { updateTimer(true); }, 1000);
       }
     });
 
